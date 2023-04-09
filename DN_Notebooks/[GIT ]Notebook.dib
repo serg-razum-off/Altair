@@ -24,7 +24,7 @@ Write-Host $projectRoot;
 
 #!pwsh
 
-. $projectRoot/Classes/git.ps1; 
+. $projectRoot/Classes/PS/GIT.ps1; 
 $git = [git]::new()
 
 #!markdown
@@ -41,7 +41,9 @@ $commHeaderMessage = 'EDA on vega Airports'
 #Body can be multiline. Make a vivid separator for each of the lines, like '-->'
 $commBodyMessage = ` 
 '
->> 
+>> [PD] qick practice on V_Filghts.ipynb created
+>> flights by year/month analisys 
+>> origin vs destination analysis
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
