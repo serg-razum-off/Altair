@@ -36,12 +36,12 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = '[LNG] LangChain docs.ipynb /in progress/'
+$commHeaderMessage = 'EDA on vega Airports'
 
 #Body can be multiline. Make a vivid separator for each of the lines, like '-->'
 $commBodyMessage = ` 
 '
->> Persisted vectordb saved and loaded; qwr returned the answer
+>> 
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
