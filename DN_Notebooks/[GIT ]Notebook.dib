@@ -36,12 +36,12 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = 'Scrapping from Wiki Airports'
+$commHeaderMessage = 'Scrapping from Wiki for US Airports'
 
-#Body can be multiline. Make a vivid separator for each of the lines, like '-->'
+#Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> Skrapping done; Airports from dataset mapped to Wiki. Country == USA only
+>> Skrapping done; Respective function added to functions
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
