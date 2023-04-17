@@ -36,12 +36,12 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = 'Sns and plotly Heatmaps added'
+$commHeaderMessage = 'Transformation to Categrory on Load added'
 
 #Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> ...painfully
+>> x.origin, x.destination --> .astype(Category)
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
