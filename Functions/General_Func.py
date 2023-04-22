@@ -28,6 +28,6 @@ def delete_variables(variables_list):
             exec(f'del {variable_name}', frame_globals, frame_globals)
             print(f">>> Variable '{variable_name}'{'.'* (30 - len(variable_name))} deleted from globals().")
         else:
-            print(f">>> Variable '{variable_name}' does not exist.")
+            print(f">>> Variable '{variable_name}'{'.'* (30 - len(variable_name))} does not exist.")
     gc.collect
 

@@ -36,13 +36,12 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = 'Hottest Airports by destination and State'
+$commHeaderMessage = 'Vega Flights Dataset Analysis: finished'
 
 #Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> [PD] practice on V_Filghts.ipynb --> Hottest Airports within hottest States -- by destination
->> General_Func.py --> function for removal of listed variables added
+>> done; explanations also added
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
@@ -64,11 +63,11 @@ $git.ShowBranches()
 
 #!pwsh
 
-$git.NewBranch("LCh_Preliminary_HandsOn")
+# $git.NewBranch("LCh_Preliminary_HandsOn")
 
 #!pwsh
 
-$pbx.git_SwitchBranch("PS_updates_learning")
+# $pbx.git_SwitchBranch("PS_updates_learning")
 
 #!markdown
 
