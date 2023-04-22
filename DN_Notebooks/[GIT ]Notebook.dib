@@ -24,7 +24,7 @@ Write-Host $projectRoot;
 
 #!pwsh
 
-. $projectRoot/Classes/git.ps1; 
+. $projectRoot/Classes/PS/GIT.ps1; 
 $git = [git]::new()
 
 #!markdown
@@ -36,12 +36,12 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = '[LNG] LangChain docs.ipynb /in progress/'
+$commHeaderMessage = 'Vega Flights Dataset Analysis: finished'
 
-#Body can be multiline. Make a vivid separator for each of the lines, like '-->'
+#Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> Persisted vectordb saved and loaded; qwr returned the answer
+>> last updates and changes
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
@@ -63,11 +63,11 @@ $git.ShowBranches()
 
 #!pwsh
 
-$git.NewBranch("LCh_Preliminary_HandsOn")
+# $git.NewBranch("LCh_Preliminary_HandsOn")
 
 #!pwsh
 
-$pbx.git_SwitchBranch("PS_updates_learning")
+# $pbx.git_SwitchBranch("PS_updates_learning")
 
 #!markdown
 
