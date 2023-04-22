@@ -41,7 +41,7 @@ $commHeaderMessage = 'Vega Flights Dataset Analysis: finished'
 #Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> done; explanations also added
+>> last updates and changes
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
