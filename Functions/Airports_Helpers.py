@@ -1,4 +1,5 @@
 def get_wiki_airports():
+# SR: this function is GPT-created from the tag-based task
     import requests
     from bs4 import BeautifulSoup
     import pandas as pd
@@ -49,6 +50,7 @@ def get_wiki_airports():
     return df
 
 def get_wiki_airports_US():
+# SR: this function is GPT-created from the tag-based task
     import requests
     from bs4 import BeautifulSoup
     import pandas as pd
@@ -88,6 +90,3 @@ def get_wiki_airports_US():
     df = pd.DataFrame({'City': cities, 'IATA': iata_codes, 'State': states})
 
     return df
-
-
-
