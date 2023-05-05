@@ -4,8 +4,9 @@ from typing import List
 def print_X(text: str, dashes: int = 30) -> None:
     """Prettifyer for printing in Jypyter Notebook"""
     from math import ceil
-    print("="*ceil(dashes - len(text)/2) + " " +
-          text + " " + "="*ceil(dashes - len(text)/2))
+    dash_len =  3 if ceil(dashes - len(text)/2) < 1 else ceil(dashes - len(text)/2)
+
+    print("=" *  dash_len + f" {text} " + "=" * dash_len)
 
 
 def delete_variables(variables_list):
