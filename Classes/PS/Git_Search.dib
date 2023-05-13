@@ -1,0 +1,138 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# This Notebook explores Search-in-GIT possibilities
+
+#!pwsh
+
+# Define the SearchResult class
+class SearchResult {
+    [datetime]$Date
+    [string]$CommitHash
+    [string]$BranchName
+    [int]$LineNumber
+    [string]$LineContent
+    [string]$FileName
+}
+
+#!pwsh
+
+# Define the Search-GitCommits function
+function Search-GitCommits {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$BranchName,
+        [Parameter(Mandatory = $true)]
+        [string]$RegexPattern
+    )
+
+    # Step 2: grab all Commits of the Branch
+    $commits = git log --format="%H" $branchName
+
+    # Step 3: loop through the text of Commits and search for the RegEx pattern
+    $results = New-Object System.Collections.ArrayList
+    foreach ($commit in $commits) {
+        $date = git show --format="%ci" -s $commit
+        $files = git show --pretty="" --name-only $commit
+        foreach ($file in $files) {
+            $lines = git show "$commit`:$file"
+            $lineNumber = 0
+            foreach ($line in $lines) {
+                $lineNumber++
+                if ($line -match $regexPattern) {
+                    # Step 4: create a SearchResult object and add it to the array
+                    $searchResult = [SearchResult]@{
+                        Date = [datetime]::ParseExact($date.Trim(), "yyyy-MM-dd HH:mm:ss zzz", $null)
+                        CommitHash = $commit
+                        BranchName = $branchName
+                        LineNumber = $lineNumber
+                        LineContent = $line
+                        FileName = $file
+                    }
+                    [void]$results.Add($searchResult)
+                }
+            }
+        }
+    }
+
+    # Step 5: return the results
+    return $results
+}
+
+#!pwsh
+
+$results = Search-GitCommits -BranchName "kggl_videogames" -RegexPattern "# create a second y-axis with a different scale"
+
+#!pwsh
+
+$results
+
+#!markdown
+
+### Optimizing this Search Function
+
+#!pwsh
+
+# group by LineContent and get the earliest Date
+$uniqueResults = $results |
+    Group-Object LineContent |
+    ForEach-Object {
+        $_.Group | Sort-Object Date | Select-Object -First 1
+    }
+
+# output the unique results
+$uniqueResults
+
+#!pwsh
+
+function Search-GitCommitsO {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$BranchName,
+        [Parameter(Mandatory = $true)]
+        [string]$RegexPattern
+    )
+
+    # Step 1: grab all Commits of the Branch using git rev-list
+    $commits = git rev-list --reverse $branchName
+
+    # Step 2: loop through the commits in parallel and search for the RegEx pattern
+    $results = [System.Collections.Generic.List[SearchResult]]::new()
+    $commits | ForEach-Object -Parallel {
+        $commit = $_
+        $date = git show --format="%ci" -s $commit
+        $changes = git diff-tree --no-commit-id --name-status -r $commit
+        foreach ($change in $changes) {
+            $fileName = $change.Split("`t")[1]
+            $lines = git show "$commit`:$fileName"
+            $lineNumber = 0
+            foreach ($line in $lines) {
+                $lineNumber++
+                if ($line -match $regexPattern) {
+                    # Step 3: create a SearchResult object and add it to the list
+                    $searchResult = [SearchResult]@{
+                        Date = [datetime]::ParseExact($date.Trim(), "yyyy-MM-dd HH:mm:ss zzz", $null)
+                        CommitHash = $commit
+                        BranchName = $branchName
+                        LineNumber = $lineNumber
+                        LineContent = $line
+                        FileName = $fileName
+                    }
+                    [void]$results.Add($searchResult)
+                }
+            }
+        }
+    }
+
+    # Step 4: return the results
+    return $results
+}
+
+#!pwsh
+
+$results = Search-GitCommitsO -BranchName "kggl_videogames" -RegexPattern "# create a second y-axis with a different scale"

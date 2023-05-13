@@ -36,12 +36,13 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = 'Vega Flights Dataset Analysis: finished'
+$commHeaderMessage = 'kggl_videogames: continue of analysis'
 
 #Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> little adjustment for better reading in web (GitHub)
+>> git: gitignore added
+>> kggl_videogames: plot added: Number of Games / Platforms by Years
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
