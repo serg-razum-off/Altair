@@ -6,10 +6,6 @@
 
 # This Notebook explores Search-in-GIT possibilities
 
-#!markdown
-
-### Basic Solution
-
 #!pwsh
 
 # Define the SearchResult class
@@ -35,7 +31,7 @@ function Search-GitCommits {
     )
 
     # Step 2: grab all Commits of the Branch
-    $commits = git log --format="%h" "kggl_videogames"
+    $commits = git log --format="%h" $BranchName
 
     # Step 3: loop through the text of Commits and search for the RegEx pattern
     $results = New-Object System.Collections.ArrayList
@@ -71,14 +67,10 @@ function Search-GitCommits {
 
 #!pwsh
 
+$regexPattern="#.SR.*"
 $branchName = "kggl_videogames"
-$regexPattern="# create a second y-axis with a different scale"
 
 $results = Search-GitCommits -BranchName $branchName -RegexPattern $regexPattern
-
-#!pwsh
-
-$results
 
 #!pwsh
 
@@ -94,32 +86,12 @@ $uniqueResults
 
 #!markdown
 
-### Optimizing Basic Solution
-
-#!markdown
-
-Make simple Example with 
-$results = [System.Collections.Generic.List[SearchResult]]::new()
+# ----------------------
 
 #!pwsh
 
- $commits = git log --format="%h" "kggl_videogames"
- $commits | Select-Object -First 5
+$a = git grep --line-number -r "add_data_label"  "kggl_videogames"
 
 #!pwsh
 
-$files = git show --pretty="" --name-only 191d448
-$files
-
-#!pwsh
-
-$regexPattern="# create a second y-axis with a different scale"
-
-#!pwsh
-
-$file = $files[0]
-
-$lines = git show "$commit`:$file"
-
-$lines -match $regexPattern
-    
+$a

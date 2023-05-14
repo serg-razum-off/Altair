@@ -36,13 +36,12 @@ $git = [git]::new()
 $currentUser = git config user.name
 $date = Get-Date -Format "yyy-MM-dd"
 
-$commHeaderMessage = 'kggl_videogames: continue of analysis'
+$commHeaderMessage = 'Git Search Function update'
 
 #Body can be multiline. Make a vivid separator for each of the lines, like '>>'
 $commBodyMessage = ` 
 '
->> git: gitignore added
->> kggl_videogames: plot added: Number of Games / Platforms by Years
+>> git: gitserchResults function debugged
 '
 
 $commMsg = "$currentUser [$date]: $commHeaderMessage `n $commBodyMessage"
