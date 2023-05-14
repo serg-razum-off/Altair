@@ -6,16 +6,20 @@
 
 # This Notebook explores Search-in-GIT possibilities
 
+#!markdown
+
+### Basic Solution
+
 #!pwsh
 
 # Define the SearchResult class
 class SearchResult {
     [datetime]$Date
-    [string]$CommitHash
     [string]$BranchName
+    [string]$CommitHash
+    [string]$FileName
     [int]$LineNumber
     [string]$LineContent
-    [string]$FileName
 }
 
 #!pwsh
@@ -31,7 +35,7 @@ function Search-GitCommits {
     )
 
     # Step 2: grab all Commits of the Branch
-    $commits = git log --format="%H" $branchName
+    $commits = git log --format="%h" "kggl_videogames"
 
     # Step 3: loop through the text of Commits and search for the RegEx pattern
     $results = New-Object System.Collections.ArrayList
@@ -40,23 +44,25 @@ function Search-GitCommits {
         $files = git show --pretty="" --name-only $commit
         foreach ($file in $files) {
             $lines = git show "$commit`:$file"
-            $lineNumber = 0
-            foreach ($line in $lines) {
-                $lineNumber++
-                if ($line -match $regexPattern) {
-                    # Step 4: create a SearchResult object and add it to the array
-                    $searchResult = [SearchResult]@{
-                        Date = [datetime]::ParseExact($date.Trim(), "yyyy-MM-dd HH:mm:ss zzz", $null)
-                        CommitHash = $commit
-                        BranchName = $branchName
-                        LineNumber = $lineNumber
-                        LineContent = $line
-                        FileName = $file
+            
+                $lineNumber = 0
+                foreach ($line in $lines) {
+                    $lineNumber++
+                    if ($line -match $regexPattern) {
+                        # Step 4: create a SearchResult object and add it to the array
+                        $searchResult = [SearchResult]@{
+                            Date = [datetime]::ParseExact($date.Trim(), "yyyy-MM-dd HH:mm:ss zzz", $null)
+                            BranchName = $branchName
+                            CommitHash = $commit
+                            FileName = $file
+                            LineNumber = $lineNumber
+                            LineContent = $line
+                        }
+                        [void]$results.Add($searchResult)
                     }
-                    [void]$results.Add($searchResult)
                 }
-            }
-        }
+                
+        }  
     }
 
     # Step 5: return the results
@@ -65,15 +71,14 @@ function Search-GitCommits {
 
 #!pwsh
 
-$results = Search-GitCommits -BranchName "kggl_videogames" -RegexPattern "# create a second y-axis with a different scale"
+$branchName = "kggl_videogames"
+$regexPattern="# create a second y-axis with a different scale"
+
+$results = Search-GitCommits -BranchName $branchName -RegexPattern $regexPattern
 
 #!pwsh
 
 $results
-
-#!markdown
-
-### Optimizing this Search Function
 
 #!pwsh
 
@@ -87,52 +92,34 @@ $uniqueResults = $results |
 # output the unique results
 $uniqueResults
 
-#!pwsh
+#!markdown
 
-function Search-GitCommitsO {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true)]
-        [string]$BranchName,
-        [Parameter(Mandatory = $true)]
-        [string]$RegexPattern
-    )
+### Optimizing Basic Solution
 
-    # Step 1: grab all Commits of the Branch using git rev-list
-    $commits = git rev-list --reverse $branchName
+#!markdown
 
-    # Step 2: loop through the commits in parallel and search for the RegEx pattern
-    $results = [System.Collections.Generic.List[SearchResult]]::new()
-    $commits | ForEach-Object -Parallel {
-        $commit = $_
-        $date = git show --format="%ci" -s $commit
-        $changes = git diff-tree --no-commit-id --name-status -r $commit
-        foreach ($change in $changes) {
-            $fileName = $change.Split("`t")[1]
-            $lines = git show "$commit`:$fileName"
-            $lineNumber = 0
-            foreach ($line in $lines) {
-                $lineNumber++
-                if ($line -match $regexPattern) {
-                    # Step 3: create a SearchResult object and add it to the list
-                    $searchResult = [SearchResult]@{
-                        Date = [datetime]::ParseExact($date.Trim(), "yyyy-MM-dd HH:mm:ss zzz", $null)
-                        CommitHash = $commit
-                        BranchName = $branchName
-                        LineNumber = $lineNumber
-                        LineContent = $line
-                        FileName = $fileName
-                    }
-                    [void]$results.Add($searchResult)
-                }
-            }
-        }
-    }
-
-    # Step 4: return the results
-    return $results
-}
+Make simple Example with 
+$results = [System.Collections.Generic.List[SearchResult]]::new()
 
 #!pwsh
 
-$results = Search-GitCommitsO -BranchName "kggl_videogames" -RegexPattern "# create a second y-axis with a different scale"
+ $commits = git log --format="%h" "kggl_videogames"
+ $commits | Select-Object -First 5
+
+#!pwsh
+
+$files = git show --pretty="" --name-only 191d448
+$files
+
+#!pwsh
+
+$regexPattern="# create a second y-axis with a different scale"
+
+#!pwsh
+
+$file = $files[0]
+
+$lines = git show "$commit`:$file"
+
+$lines -match $regexPattern
+    
