@@ -23,11 +23,12 @@ function Search-GitCommits {
         [string]$RegexPattern
     )
 
+    $topFolder = $PWD.path
     # Step 2: grab all Commits of the Branch
     $commits = git log --format="%h" $BranchName
 
     # Step 3: loop through the text of Commits and search for the RegEx pattern
-    $results = New-Object System.Collections.ArrayList
+    # $results = New-Object System.Collections.ArrayList
     foreach ($commit in $commits) {
         $date = git show --format="%ci" -s $commit
         $files = git show --pretty="" --name-only $commit
@@ -47,7 +48,10 @@ function Search-GitCommits {
                             LineNumber = $lineNumber
                             LineContent = $line
                         }
-                        [void]$results.Add($searchResult)
+                        # [void]$results.Add($searchResult)
+                        $searchResult >> ($topFolder + '\gitLogAnalysis.txt')
+                        "--"*10 >> ($topFolder + '\gitLogAnalysis.txt')
+                        # Write-Host ($topFolder + '\gitLogAnalysis.txt')
                     }
                 }
                 
@@ -55,5 +59,5 @@ function Search-GitCommits {
     }
 
     # Step 5: return the results
-    return $results
+    # return $results
 }
