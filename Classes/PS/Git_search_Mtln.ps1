@@ -41,9 +41,11 @@ function Search-GitCommits {
         foreach ($file in $files) {
             $lines = git show "$commit`:$file"
             
-                $lineNumber = 0
-                foreach ($line in $lines) {
-                    $lineNumber++
+                for ($i = 0; $i -lt $lines.Count; $i++) {
+                    $previousLine = if ($i -gt 0) { $lines[$i - 1] } else { $null }
+                    $currentLine = $lines[$i]
+                    $nextLine = if ($i -lt ($lines.Count - 1)) { $lines[$i + 1] } else { $null }
+                    
                     if ($line -match $regexPattern) {
                         # Step 4: create a SearchResult object and add it to the array
                         $searchResult = [SearchResult]@{
@@ -51,8 +53,8 @@ function Search-GitCommits {
                             BranchName = $branchName
                             CommitHash = $commit
                             FileName = $file
-                            LineNumber = $lineNumber
-                            LineContent = $line
+                            LineNumber = $i
+                            LineContent = "$previousLine \n $currentLine \n $nextLine"
                         }
                         # [void]$results.Add($searchResult)
                         $searchResult >> ($topFolder + '\SR_gitLogAnalysis.txt')
