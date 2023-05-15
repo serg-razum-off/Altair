@@ -14,6 +14,8 @@ function Search-GitCommits {
     $branchName = "kggl_videogames"
 
     $results = Search-GitCommits -BranchName $branchName -RegexPattern $regexPattern
+    ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+
     #>
     [CmdletBinding()]
     param (
